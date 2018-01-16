@@ -30,27 +30,50 @@ function initialize() {
 
 function getLot() {
 	process.stdout.write('\x1Bc');
-	lot = PROMPT.question(`\nWhat lot will this be built on? `);
+	while (isNaN(lot)) {
+		lot = PROMPT.question(`\nWhat lot will this house be built on?`);
+		if (isNaN(lot)) {
+			console.log("INVALID INPUT");
+		}
+	}
 }
 
 function getBed() {
 	const BED_VALUE = 17000;
 	process.stdout.write('\x1Bc');
-	let bed = PROMPT.question(`\nHow many bedrooms are in this house? `);
+	let bed = "JC";
+	while (isNaN(bed)) {
+		bed = PROMPT.question(`\nHow many bedrooms are in this house?`);
+		if (isNaN(bed)) {
+			console.log("INVALID INPUT");
+		}
+	}
 	value = value+(bed*BED_VALUE);
 }
 
 function getBath() {
 	const BATH_VALUE = 12500;
+	let bath = "JC"
 	process.stdout.write('\x1Bc');
-	let bath = PROMPT.question(`\nHow many bathrooms are in this house? `);
+	while (isNaN(bath)) {
+		bath = PROMPT.question(`\nHow many bathrooms are in this house?`);
+		if (isNaN(bath)) {
+			console.log("INVALID INPUT");
+		}
+	}
 	value = value+(bath*BATH_VALUE);
 }
 
 function getGarage() {
 	const GARAGE_VALUE = 6000;
+	let garage = "JC";
 	process.stdout.write('\x1Bc');
-	let garage = PROMPT.question(`\nHow many cars can fit in the garage? `);
+	while (isNaN(garage)) {
+        	garage = PROMPT.question(`\nHow many bathrooms are in this house?`);
+		if (isNaN(garage)) {
+			console.log("INVALID INPUT");
+		}
+	}
 	value = value+(garage*GARAGE_VALUE);
 }
 
@@ -59,3 +82,6 @@ function displayValues() {
 	console.log("\nThe house being buit on lot " + lot + " will cost $" + value + ".");
 }
 
+function stopTimer() {
+	timer.stop();
+}
