@@ -1,10 +1,10 @@
 #!/usr/bin/nodejs
 
 /*
-    Author: Jiminy Cricket
-    Class: CIS 104
-    Version: 1.0
-    Purpose: Process Insurance Claims
+	Author: Jiminy Cricket
+	Class: CIS 104
+	Version: 1.0
+	Purpose: Find new customer's insurance premium
 */
 
 "use strict";
@@ -46,6 +46,8 @@ function setContinue() {
 			continueResponse = PROMPT.question(`\nDo you want to continue? [1=yes,0=no]`);
 			if (continueResponse > 1 || continueResponse < 0) {
 				console.log("INVALID INPUT");
+				PROMPT.question(`\nPress enter to continue.`)
+				console.stdout.write('\x1Bc');
 			}
 		}
 	} else {
@@ -70,12 +72,9 @@ function getName() {
 
 function getBirth() {
 	let birthDay, birthMonth, birthYear;
-	console.stdout.write('\x1Bc');
-	birthYear = PROMPT.question(`\nWhat year was ` + firstname + ` born in?`);
-	console.stdout.write('\x1Bc');
-	birthMonth = PROMPT.question(`\nWhat month was ` + firstname + ` born in within ` + birthYear + `?\nPlease enter a number between 1 and 12.`);
-	console.stdout.write('\x1Bc');
-	birthDay = PROMPT.question(`\nWhat day was ` + firstname + ` born on in ` + birthMonth + `?`);
+	birthYear = getBirthYear();
+	birthMonth = getBirthMonth();
+	birthDay = getBirthDay(birthYear,birthMonth);
 	birth = birthYear + "/" + birthMonth + "/" + birthDay;
 	let bd = "The customer was born on " + birth + ".";
 	let confirmBirth = confirmVar(bd);
@@ -83,6 +82,83 @@ function getBirth() {
 		getAge(birthDay, birthMonth, birthYear);
 	} else {
 		return getBirth();
+}
+
+function getBirthYear() {
+	let year = -1;
+	const MINYEAR = 1900;
+	let today = Date();
+	const MAXYEAR = today.getFullYear();
+	console.stdout.write('\x1Bc');
+	while (year < MINYEAR || year > MAXYEAR) {
+		year = PROMPT.question(`\nWhat year was ` + firstname + ` born in?`);
+		if (year < MINYEAR || year > MAXYEAR) {
+			console.log("INVALID INPUT");
+			PROMPT.question(`\nPress enter to continue.`)
+			console.stdout.write('\x1Bc');
+		}
+	}
+	let birth = firstName + " was born in the year " + year + ".";
+	let confirmBirth = confirmVar(birth);
+	if (confirmBirth === 0) {
+		return getBirthYear();
+	}
+	return year;
+}
+
+function getBirthMonth() {
+	let month = -1;
+	const MINMONTH = 1;
+	const MAXMONTH = 12;
+	console.stdout.write('\x1Bc');
+	while (isNaN(month) || month < MINMONTH || month > MAXMONTH) {
+		month = PROMPT.question(`\nWhat month was ` + firstname + ` born in?\nPlease enter a number between 1 and 12.`);
+		if (isNan(month) || month < MINMONTH || month > MAXMONTH) {
+			console.log("INVALID INPUT");
+			PROMPT.question(`\nPress enter to continue.`)
+			console.stdout.write('\x1Bc');
+		}
+	}
+	let birth = firstName + "was born in the month of " + month + ".";
+	let confirmBirth = confirmVar(birth);
+	if (confirmBirth === 0) {
+		return getBirthMonth();
+	}
+}
+
+function getBirthDay(year,month) {
+	let day = -1;
+	const MINDAY = 1;
+	const MAXDAY = getMaxDay(year,month);
+	console.stdout.write('\x1Bc');
+	while (isNaN(day) || day < MINDAY || day > MAXDAY) {
+		day = PROMPT.question(`\nWhat day was ` + firstname + ` born on in ` + month + `?`);
+		if (isNaN(day) || day < MINDAY || day > MAXDAY) {
+			console.log("INVALID INPUT");
+			PROMPT.question(`\nPress enter to continue.`)
+			console.stdout.write('\x1Bc');
+		}
+	}
+	birth = firstName + " was born on " + day + " in " + month + ".";
+	confirmBirth = confirmVar(birth);
+	if (confirmBirth === 0) {
+		return getBirthDay();
+	}
+}
+
+function getMaxDay(year,month) {
+	if (month === 1 || month === 3 || month === 5 || month === 7 || month === 8 || month === 10 || month === 12) {
+		let day = 31;
+	} else if (month === 4 || month === 6 || month === 9 || month === 11) {
+		let day = 30;
+	} else if (month === 2) {
+		if (year%4 !== 0 || year === 1900) {
+			let day = 28;
+		} else {
+			let day = 29;
+		}
+	}
+	return day;
 }
 
 function getAge(birthDay, birthMonth, birthYear) {
@@ -131,12 +207,52 @@ function getAddFault(atFault) {
 }
 
 function getPolicy() {
-	policyNumber = policies.length+1;
+	policyNumber = policies.length+1; //gets length of policies array
 }
 
 function getDueDate() {
-	today = Date();
+	let confirmDate;
+	let today = Date();
 	dueDate = today.getDate();
+	if (dueDate > 28) {
+		dueDate = 28;
+	}
+	while (isNaN(confirmDate) || confirmDate > 1 || confirmDate < 0) {
+		console.log(firstName + " has been given the due date of " + dueDate + ".");
+		confirmDate = PROMPT.question(`\nIs this alright? [1=yes,0=no]);
+		if (isNaN(confirmDate) || confirmDate > 1 || confirmDate < 0) {
+			console.log("INVALID INPUT");
+			PROMPT.question(`\nPress enter to continue.`)
+			console.stdout.write('\x1Bc');
+		}
+	}
+	if (confirmDate === NO) {
+		pickDue();
+	}
+}
+
+function pickDue() {
+	dueDate = -1;
+	const MINDAY = 1;
+	const MAXDAY = 31;
+	console.stdout.write('\x1Bc');
+	while (isNaN(dueDate) || dueDate > MAXDAY || dueDate < MINDAY) {
+		dueDate = PROMPT.question(`What due date would ` + firstName + ` like?`);
+		if (isNaN(dueDate) || dueDate > MAXDAY || dueDate < MINDAY) {
+			console.log("INVALID INPUT");
+			PROMPT.question(`\nPress enter to continue.`)
+			console.stdout.write('\x1Bc');
+		}
+	}
+	due = firstName + "'s due date will be the " + dueDate + " of every month.";
+	confirmDate = confirmVar(due);
+	if (confirmDate === NO) {
+		return pickDue();
+	}
+	if (dueDate > 28) {
+		console.log("On months with less than " + dueDate + "days, the last day of the month");
+		console.log("will be the due date.");
+	}
 }
 
 function populateArray() {
@@ -166,6 +282,8 @@ function confirmVar(statement) {
 		confirmVar = PROMPT.question(`\nIs this correct? [1=yes,0=no]`);
 		if (confirmName !== YES && confirmName !== NO) {
 			console.log("INVALID INPUT");
+			PROMPT.question(`\nPress enter to continue.`)
+			console.stdout.write('\x1Bc');
 		}
 	}
 	return confirmVar;
