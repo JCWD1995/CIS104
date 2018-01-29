@@ -69,7 +69,7 @@ function getGarage() {
 	let garage = "JC";
 	process.stdout.write('\x1Bc');
 	while (isNaN(garage)) {
-        	garage = PROMPT.question(`\nHow many bathrooms are in this house?`);
+        	garage = PROMPT.question(`\nHow many cars can fit in the garage?`);
 		if (isNaN(garage)) {
 			console.log("INVALID INPUT");
 		}
