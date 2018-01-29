@@ -52,6 +52,7 @@ function setContinue() {
 		}
 	} else {
 		continueResponse = 1;
+	}
 }
 
 function initalizePremium() {
@@ -82,6 +83,7 @@ function getBirth() {
 		getAge(birthDay, birthMonth, birthYear);
 	} else {
 		return getBirth();
+	}
 }
 
 function getBirthYear() {
