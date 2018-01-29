@@ -219,7 +219,7 @@ function getDueDate() {
 	}
 	while (isNaN(confirmDate) || confirmDate > 1 || confirmDate < 0) {
 		console.log(firstName + " has been given the due date of " + dueDate + ".");
-		confirmDate = PROMPT.question(`\nIs this alright? [1=yes,0=no]);
+		confirmDate = PROMPT.question(`\nIs this alright? [1=yes,0=no]`);
 		if (isNaN(confirmDate) || confirmDate > 1 || confirmDate < 0) {
 			console.log("INVALID INPUT");
 			PROMPT.question(`\nPress enter to continue.`)
