@@ -1,2 +1,3 @@
 # CIS 104
-All the projects for my CIS 104 Class
+
+This repository will be used for all my classwork in my intro to programming logic class
