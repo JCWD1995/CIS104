@@ -35,6 +35,7 @@ function main() {
 		printInfo();
 		setContinueResponse();
 	}
+	printEnd();
 }
 
 main();
@@ -169,7 +170,7 @@ function getBirthDay(year,month) {
 	const MAXDAY = getMaxDay(year,month);
 	process.stdout.write('\x1Bc');
 	while (isNaN(day) || day < MINDAY || day > MAXDAY) {
-		day = PROMPT.question(`\nWhat day was ` + firstName + ` born on in ` + month + `?`);
+		day = PROMPT.question(`\nWhat day was ` + firstName + ` born on in ` + monthName + `?`);
 		if (isNaN(day) || day < MINDAY || day > MAXDAY) {
 			console.log("INVALID INPUT");
 			PROMPT.question(`\nPress enter to continue.`)
@@ -231,6 +232,7 @@ function getAddition(age) {
 }
 
 function getFault() {
+	let confirmFault;
 	let atFault = -1;
 	process.stdout.write('\x1Bc');
 	while (isNaN(atFault) || atFault < 0) {
@@ -254,7 +256,7 @@ function getAddFault(atFault) {
 }
 
 function getPolicy() {
-	policyNumber = policies.length+1; //gets length of policies array
+	policyNumber = policies.length+1; //gets length of policies array and adds 1
 }
 
 function getDueDate() {
@@ -280,6 +282,7 @@ function getDueDate() {
 }
 
 function pickDue() {
+	let confirmDate;
 	dueDate = -1;
 	const MINDAY = 1;
 	const MAXDAY = 31;
@@ -297,19 +300,16 @@ function pickDue() {
 		return pickDue();
 	}
 	if (dueDate > 28) {
+		process.stdout.write('\x1Bc');
 		console.log("On months with less than " + dueDate + "days, the last day of the month");
 		console.log("will be the due date.");
+		PROMPT.question(`\nPress enter to continue.`)
 	}
 }
 
 function populateArray() {
-	i = policies.length;
-	policies[i][0] = policyNumber;
-	policies[i][1] = lastName;
-	policies[i][2] = firstName;
-	policies[i][3] = birth;
-	policies[i][4] = premium;
-	policies[i][5] = dueDate;
+	let policy = [policyNumber, lastName, firstName, birth, dueDate, premium];
+	policies.push(policy)
 }
 
 function printInfo() {
@@ -326,7 +326,7 @@ function confirmVar(statement) {
 	process.stdout.write('\x1Bc');
 	while (isNaN(checkVar) || checkVar > 1 || checkVar < 0) {
 		console.log(statement);
-		checkVar = PROMPT.question(`\nIs this correct? [1=yes,0=no]`);
+		checkVar = PROMPT.question(`\nIs this correct? [1=yes,0=no]\n`);
 		if (isNaN(checkVar) || checkVar > 1 || checkVar < 0) {
 			console.log("INVALID INPUT");
 			PROMPT.question(`\nPress enter to continue.`)
@@ -337,3 +337,8 @@ function confirmVar(statement) {
 	return checkVar;
 }
 
+function printEnd() {
+	process.stdout.write('\x1Bc');
+	console.log("Thank you for using this program.");
+	PROMPT.question(`Press enter to exit.`);
+}
