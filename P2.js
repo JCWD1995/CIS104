@@ -164,7 +164,7 @@ function setMonthName(month) {
 
 function getBirthDay(year,month) {
 	let confirmBirth;
-	let monthName = setMonthName();
+	let monthName = setMonthName(month);
 	let day = -1;
 	const MINDAY = 1;
 	const MAXDAY = getMaxDay(year,month);
