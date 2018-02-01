@@ -11,7 +11,7 @@
 const PROMPT = require('readline-sync');
 
 let ratings = [];
-let newRating, invalidResponse;
+let newRating, invalidResponse, movieTitle;
 const RATING = {
 	MIN: 1,
 	MAX: 5,
@@ -20,6 +20,7 @@ const RATING = {
 
 function main() {
 	setInvalidResponse();
+	setMovieTitle();
 	while (invalidResponse < RATING.INVALID) {
 		setNewRating();
 		checkNewRating();
@@ -33,10 +34,14 @@ function setInvalidResponse() {
 	invalidResponse = 0;
 }
 
+function setMovieTitle() {
+	movieTitle = PROMPT.question(`What movie would you like to review?`);
+}
+
 function setNewRating() {
 	process.stdout.write('\x1Bc');
 	console.log("Current invalid ratings are " + invalidResponse + " out of " + RATING.INVALID + " in a row.");
-	newRating = Number(PROMPT.question(`\nWhat rating would you give this movie?\n`));
+	newRating = Number(PROMPT.question(`\nWhat rating would you give ` + movieTitle + `?\n`));
 }
 
 function checkNewRating() {
