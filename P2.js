@@ -26,11 +26,11 @@ function main() {
 	setContinueResponse();
 	while (continueResponse === YES) {
 		initalizePremium();
-		getName();
-		getBirth();
-		getFault();
-		getPolicy();
-		getDueDate();
+		setName();
+		setBirth();
+		setFault();
+		setPolicy();
+		setDueDate();
 		populateArray();
 		printInfo();
 		setContinueResponse();
@@ -44,14 +44,13 @@ function setContinueResponse() {
 	if (continueResponse === YES || continueResponse === NO) {
 		continueResponse = -1;
 		while (isNaN(continueResponse) || continueResponse > 1 || continueResponse < 0) {
-			continueResponse = PROMPT.question(`\nDo you want to continue? [1=yes,0=no]\n`);
+			continueResponse = Number(PROMPT.question(`\nDo you want to continue? [1=yes,0=no]\n`));
 			if (isNaN(continueResponse) || continueResponse > 1 || continueResponse < 0) {
 				console.log("INVALID INPUT");
 				PROMPT.question(`\nPress enter to continue.\n`)
 				process.stdout.write('\x1Bc');
 			}
 		}
-		continueResponse = Number(continueResponse);
 	} else {
 		continueResponse = Number(1);
 	}
@@ -61,11 +60,9 @@ function initalizePremium() {
 	premium = BASE;
 }
 
-function getName() {
-	process.stdout.write('\x1Bc');
-	lastName = PROMPT.question(`\nWhat is the customer's last name?\n`);
-	process.stdout.write('\x1Bc');
-	firstName = PROMPT.question(`\nWhat is the customer's first name?\n`);
+function setName() {
+	setLastName();
+	setFirstName();
 	process.stdout.write('\x1Bc');
 	let confirmName = confirmVar("The customer's name is " + firstName + " " + lastName + ".");
 	if (confirmName === NO) {
@@ -73,21 +70,63 @@ function getName() {
 	}
 }
 
-function getBirth() {
-	let birthDay, birthMonth, birthYear;
-	birthYear = getBirthYear();
-	birthMonth = getBirthMonth();
-	birthDay = getBirthDay(birthYear,birthMonth);
-	birth = birthYear + "/" + birthMonth + "/" + birthDay;
-	let confirmBirth = confirmVar("The customer was born on " + birth + ".");
-	if (confirmBirth === YES) {
-		getAge(birthDay, birthMonth, birthYear);
-	} else {
-		return getBirth();
+function setLastName() {
+	process.stdout.write('\x1Bc');
+	lastName = PROMPT.question(`\nWhat is the customer's last name?\n`);
+	let confirmName = checkName(lastName);
+	if (confirmName ===  NO) {
+		console.log("INVALID INPUT!");
+		PROMPT.question(`\nPress enter to continue.\n`); //Freezes screen
+		process.stdout.write('\x1Bc');
+		return setLastName();
 	}
 }
 
-function getBirthYear() {
+function setFirstName() {
+	process.stdout.write('\x1Bc');
+	firstName = PROMPT.question(`\nWhat is the customer's first name?\n`);
+	let confirmName = checkName(firstName);
+	if (confirmName === NO) {
+		console.log("INVALID INPUT!");
+		PROMPT.question(`\nPress enter to continue.\n`); //Freezes screen
+		process.stdout.write('\x1Bc');
+		return setFirstName();
+	}
+}
+
+function checkName(test) {
+	let letters = test.split("");
+	let length = test.length;
+	for (let i = 0; i < length; i++) {
+		if (!isNaN(letters[i])) {
+			test = Number(0);
+		}
+	}
+	if (test !== Number(0)) {
+		if (2 < length && length < 15) {
+			test = Number(1);
+		} else {
+			test = Number(0);
+		}
+	}
+	return test;
+}
+
+function setBirth() {
+	let birthDay, birthMonth, birthYear;
+	birthYear = setBirthYear();
+	birthMonth = setBirthMonth();
+	birthDay = setBirthDay(birthYear,birthMonth);
+	birth = birthYear + "/" + birthMonth + "/" + birthDay;
+	let confirmBirth = confirmVar("The customer was born on " + birth + ".");
+	if (confirmBirth === YES) {
+		setAge(birthDay, birthMonth, birthYear);
+	} else {
+		return setBirth();
+	}
+}
+
+function setBirthYear() {
 	let year = -1;
 	const MINYEAR = 1900;
 	let today = new Date();
@@ -97,19 +136,19 @@ function getBirthYear() {
 		year = PROMPT.question(`\nWhat year was ` + firstName + ` born in?\n`);
 		if (isNaN(year) || year < MINYEAR || year > MAXYEAR) {
 			console.log("INVALID INPUT");
-			PROMPT.question(`\nPress enter to continue.\n`) //Freezes screen
+			PROMPT.question(`\nPress enter to continue.\n`); //Freezes screen
 			process.stdout.write('\x1Bc');
 		}
 	}
 	year = Number(year);
 	let confirmBirth = confirmVar(firstName + " was born in the year " + year + ".");
 	if (confirmBirth === 0) {
-		return getBirthYear();
+		return setBirthYear();
 	}
 	return year;
 }
 
-function getBirthMonth() {
+function setBirthMonth() {
 	let monthName;
 	let month = -1;
 	const MINMONTH = Number(1);
@@ -127,7 +166,7 @@ function getBirthMonth() {
 	monthName = setMonthName(month);
 	let confirmBirth = confirmVar(firstName + " was born in the month of " + monthName + ".");
 	if (confirmBirth === 0) {
-		return getBirthMonth();
+		return setBirthMonth();
 	}
 	return month;
 }
@@ -162,12 +201,12 @@ function setMonthName(month) {
 	return name;
 }
 
-function getBirthDay(year,month) {
+function setBirthDay(year,month) {
 	let confirmBirth;
 	let monthName = setMonthName(month);
 	let day = -1;
 	const MINDAY = 1;
-	const MAXDAY = getMaxDay(year,month);
+	const MAXDAY = setMaxDay(year,month);
 	process.stdout.write('\x1Bc');
 	while (isNaN(day) || day < MINDAY || day > MAXDAY) {
 		day = PROMPT.question(`\nWhat day was ` + firstName + ` born on in ` + monthName + `?`);
@@ -180,12 +219,12 @@ function getBirthDay(year,month) {
 	day = Number(day);
 	confirmBirth = confirmVar(firstName + " was born on " + day + " in " + monthName + ".");
 	if (confirmBirth === 0) {
-		return getBirthDay();
+		return setBirthDay();
 	}
 	return day;
 }
 
-function getMaxDay(year,month) {
+function setMaxDay(year,month) {
 	let maxDay;
 	if (month === Number(1) || month === Number(3) || month === Number(5) || month === Number(7) || month === Number(8) || month === Number(10) || month === Number(12)) {
 		maxDay = Number(31);
@@ -201,7 +240,7 @@ function getMaxDay(year,month) {
 	return maxDay;
 }
 
-function getAge(birthDay, birthMonth, birthYear) {
+function setAge(birthDay, birthMonth, birthYear) {
 	let today = new Date();
 	let day = today.getDate();
 	let month = today.getMonth()+1;
@@ -218,10 +257,10 @@ function getAge(birthDay, birthMonth, birthYear) {
 		}
 	}
 	age = Number(age);
-	getAddition(age);
+	setAddition(age);
 }
 
-function getAddition(age) {
+function setAddition(age) {
 	if (age > 15 && age < 30) {
 		premium = premium+AGE1530;
 	} else if (age === 30 || (age > 30 && age < 45)) {
@@ -231,7 +270,7 @@ function getAddition(age) {
 	}
 }
 
-function getFault() {
+function setFault() {
 	let confirmFault;
 	let atFault = -1;
 	process.stdout.write('\x1Bc');
@@ -245,21 +284,21 @@ function getFault() {
 	}
 	confirmFault = confirmVar(firstName + " has had " + atFault + " at fault accidents in the past 3 years.");
 	if (confirmFault === NO) {
-		return getFault();
+		return setFault();
 	}
-	getAddFault(atFault);
+	setAddFault(atFault);
 }
 
-function getAddFault(atFault) {
+function setAddFault(atFault) {
 	let value = atFault * ATFAULT;
 	premium = premium+value;
 }
 
-function getPolicy() {
+function setPolicy() {
 	policyNumber = policies.length+1; //gets length of policies array and adds 1
 }
 
-function getDueDate() {
+function setDueDate() {
 	let confirmDate;
 	let today = new Date();
 	dueDate = today.getDate();
@@ -342,3 +381,4 @@ function printEnd() {
 	console.log("Thank you for using this program.");
 	PROMPT.question(`Press enter to exit.`);
 }
+
