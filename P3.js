@@ -35,6 +35,7 @@ function setInvalidResponse() {
 }
 
 function setMovieTitle() {
+	process.stdout.write('\x1Bc');
 	movieTitle = PROMPT.question(`What movie would you like to review?`);
 }
 
@@ -73,6 +74,6 @@ function setAverageRating() {
 
 function printAverageRating(averageRating) {
 	process.stdout.write('\x1Bc');
-	console.log("The average rating of this movie is " + averageRating + " out of 5.");
+	console.log("The average rating of " + movieTitle + " is " + averageRating + " out of 5.");
 }
 
