@@ -36,7 +36,7 @@ function setInvalidResponse() {
 
 function setMovieTitle() {
 	process.stdout.write('\x1Bc');
-	movieTitle = PROMPT.question(`What movie would you like to review?`);
+	movieTitle = PROMPT.question(`What movie would you like to review?\n`);
 }
 
 function setNewRating() {
@@ -54,7 +54,7 @@ function checkNewRating() {
 }
 
 function incrementInvalidResponse() {
-	invalidResponse = invalidResponse+1;
+	invalidResponse++;
 }
 
 function addRating() {
