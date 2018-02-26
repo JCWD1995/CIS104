@@ -128,9 +128,10 @@ function setBirth() {
 
 function setBirthYear() {
 	let year = -1;
+	let MIN_AGE = Number(15);
 	const MINYEAR = 1900;
 	let today = new Date();
-	const MAXYEAR = today.getFullYear()-15; //We don't want anyone under age 15
+	const MAXYEAR = today.getFullYear()-MIN_AGE; //We don't want anyone under age 15
 	process.stdout.write('\x1Bc');
 	while (isNaN(year) || year < MINYEAR || year > MAXYEAR) {
 		year = PROMPT.question(`\nWhat year was ` + firstName + ` born in?\n`);
