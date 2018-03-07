@@ -11,6 +11,7 @@
 const PROMPT = require('readline-sync');
 
 let reviews = [];
+let movies = [];
 
 const YES = Number(1);
 const RATING = {
@@ -19,6 +20,7 @@ const RATING = {
 }
 
 function main() {
+	setMovies();
 	while (0 === 0) {
 		printMenu();
 	}
@@ -26,12 +28,20 @@ function main() {
 
 main();
 
+function setMovies() {
+	movies[0] = "Thor Ragnarok";
+	movies[1] = "Tomb Raider";
+	movies[2] = "A Wrinkle in Time";
+	movies[3] = "Death Wish";
+}
+
 function printMenu() {
 	process.stdout.write('\x1Bc');
 	console.log("What would you like to do?");
 	console.log("1. Review Movie");
 	console.log("2. Look at Reviews");
 	console.log("3. List average stars on a movie");
+	console.log("4. Sort movies by average rating");
 	let choice = Number(PROMPT.question("Give your option choice:\n"));
 	directChoice(choice);
 }
@@ -44,7 +54,10 @@ function directChoice(choice) {
 			break;
 		case 3: averageReviews();
 			break;
+		case 4: listMovies();
 		default: console.log("Invalid Value");
+			 PROMPT.question("Press enter to continue.");
+			 process.stdout.write("\x1Bc");
 	}
 }
 
@@ -53,15 +66,60 @@ function giveReview() {
 	let review = [];
 	title = setTitle();
 	rating = setRating(title);
-	review = setReview(title);
+	review = setReview();
 	pushReview(title, rating, review);
 }
 
 function setTitle() {
 	process.stdout.write('\x1Bc');
-	let name
-	name = PROMPT.question("What movie would you like to review? \nPlease enter the movie title exactly as it is given in the theatre.\n");
-	return name;
+	let askMovie = -1;
+	while (askMovie !== "y" && askMovie !== "n") {
+		printMovieList();
+		askMovie = PROMPT.question("Do you want to review any of these movies?\nEnter y for yes and n for no.\n");
+		if (askMovie !== "y" && askMovie !== "n") {
+			console.log("INVALID INPUT");
+			PROMPT.question("Press enter to continue.");
+			process.stdout.write("\x1Bc");
+		}
+	}
+	if (askMovie === "y") {
+		let j = pickMovie();
+		return movies[j];
+	} else {
+		let title = addMovie();
+		pushMovie(title);
+		return title;
+	}
+}
+
+function pushMovie(title) {
+	movies.push(title);
+}
+
+function addMovie() {
+	let movie = PROMPT.question("Which movie would you like to add?\n");
+	return movie;
+}
+
+function pickMovie() {
+	process.stdout.write("\x1Bc");
+	let i = -1;
+	while (isNaN(i) || i < 0 || i >= movies.length) {
+		printMovieList();
+		i = Number(PROMPT.question("Which Movie would you like to review?\nPlease enter its ID:\n")-1);
+			if ((isNaN(i) || i < 0 || i >= movies.length) && i%1 !== 0) {
+				console.log("INVALID INPUT");
+				PROMPT.question("Press enter to continue.");
+				process.stdout.write("\x1Bc");
+			}
+	}
+	return i;
+}
+
+function printMovieList() {
+	for (let i = 0; i < movies.length; i++) {
+		console.log(`${i+1}. ${movies[i]}`);
+	}
 }
 
 function setRating(title) {
@@ -78,7 +136,7 @@ function setRating(title) {
 	return rating;
 }
 
-function setReview(title) {
+function setReview() {
 	let continueResponse = YES;
 	let completeReview = [];
 	let reviewPart;
@@ -129,30 +187,62 @@ function directQuery(choice) {
 
 function queryTitle() {
 	process.stdout.write('\x1Bc');
-	let title;
-	title = PROMPT.question("Which movie would you like to see reviews for?\nPlease enter the title exactly as we post it.\n");
-	printReviewsTitle(title);
+	let i = pickMovie();
+	printReviewsTitle(movies[i]);
 }
 
 function printReviewsTitle(title) {
-	const ALL_REVIEWS = reviews.length;
-	for (let i = Number(0); i < ALL_REVIEWS; i++) {
-		if (reviews[i][0] = title) {
-			console.log(i + " " + reviews[i][0] + " " + reviews[i][1] + " star review");
+	let j = 1;
+	for (let i = 0; i < reviews.length; i++) {
+		if (reviews[i][0] === title) {
+			console.log(j + " " + reviews[i][0] + " " + reviews[i][1] + " star review");
+			j++;
 		}
 	}
-	pickReview();
+	pickReview(j, title, "title");
 }
 
-function pickReview() {
+function pickReview(i, test, type) {
 	let choice;
-	choice = Number(PROMPT.question("\nPlease pick which review you would like to view."));
-	printReview(choice);
+	while (isNaN(choice) || choice < 1 || choice > i) {
+		choice = PROMPT.question("Which Review ID would you like to view?");
+		if (isNaN(choice) || choice < 1 || choice > i) {
+			console.log("INVALID INPUT");
+		}
+	}
+	findReview(choice, test, type);
 }
+
+function findReview(choice, test, type) {
+	let j = 0;
+	if (type === "title") {
+		for (let i = 0; i < reviews.length; i++) {
+			if (reviews[i][0] === test) {
+				j++;
+				if (j === choice) {
+					printReview(i);
+					break; 
+				}
+			}
+		}
+	} else {
+		for (let i = 0; i < reviews.length; i++) {
+			if (reviews[i][1] === test) {
+				j++;
+				if (j === choice) {
+					printReview(i);
+					break;
+				}
+			}
+		}
+	}
+} 
 
 function printReview(i) {
+	const title = reviews[i][0];
+	const rating = reviews[i][1];
 	const FULL_REVIEW = reviews[i][2].length;
-	console.log(reviews[i][0] + ": " + reviews[i][1] + " stars:");
+	console.log(title + ": " + rating + " stars:");
 	for (let j = 0; j < FULL_REVIEW; j++) {
 		console.log(reviews[i][2][j]);
 		console.log();
@@ -174,20 +264,20 @@ function queryRating() {
 }
 
 function printReviewsRating(rating) {
-	const ALL_REVIEWS = reviews.length;
-	for (let i = 0; i < ALL_REVIEWS; i++) {
-		if (reviews[i][1] = rating) {
-			console.log(i + " " + reviews[i][0] + " " + reviews[i][1] + " star review");
+	let j = 1;
+	for (let i = 0; i < reviews.length; i++) {
+		if (reviews[i][1] === rating) {
+			console.log(j + " " + reviews[i][0] + " " + reviews[i][1] + " star review");
+			j++;
 		}
 	}
-	pickReview();
+	pickReview(j, rating, "rating");
 }
 
 function averageReviews() {
-	let title, average;
-	title = PROMPT.question("Which title would you like to see the average reviews for?\nPlease enter the movie as it is posted.");
-	average = setAverage(title);
-	console.log("The average ratings for " + title + " is " + average + " stars out of 5.");
+	let i = pickMovie();
+	let average = setAverage(movies[i]);
+	console.log("The average ratings for " + movies[i] + " is " + average + " stars out of 5.");
 	PROMPT.question("Press enter to return to the main menu.");
 }
 
@@ -197,12 +287,39 @@ function setAverage(title) {
 	let allRatings = Number(0);
 	const ALL_REVIEWS = reviews.length;
 	for (let i = 0; i < ALL_REVIEWS; i++) {
-		if (title = reviews[i][0]) {
+		if (title === reviews[i][0]) {
 			ratingSum = ratingSum + reviews[i][1];
 			allRatings++;
 		}
 	}
 	average = ratingSum/allRatings;
 	return average;
+}
+
+function listMovies() {
+	let sortedRatings = [];
+	let average;
+	for (let i = 0; i < movies.length; i++) {
+		average = setAverage(movies[i]);
+		sortedRatings.push(movies[i], average);
+	}
+	let temp;
+	for (let i = 0; i < sortedRatings.length; i++) {
+		for (let j = 0; j < sortedRatings.length-i-1; j++) {
+			if (sortedRatings[j][1] > sortedRatings[j+1][1]) {
+				temp = sortedRatings[j];
+				sortedRatings[j] = sortedRatings[j+1];
+				sortedRatings[j+1] = temp;
+			}
+		}
+	}
+	printMovieAverages(sortedRatings);
+}
+
+function printMovieAverages(sortedRatings) {
+	for (let i = 0; i < sortedRatings.length; i++) {
+		console.log(`${sortedRatings[i][0]} has an average rating of ${sortedRatings[i][1]} stars.`);
+		console.log();
+	}
 }
 
