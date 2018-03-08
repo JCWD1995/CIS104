@@ -162,8 +162,7 @@ function setContinueReview() {
 }
 
 function pushReview(title,rating,review) {
-	let reviewInfo = [title, rating, review];
-	reviews.push(reviewInfo);
+	reviews.push([title, rating, review]);
 }
 
 function queryReviews() {
@@ -301,15 +300,17 @@ function listMovies() {
 	let average;
 	for (let i = 0; i < movies.length; i++) {
 		average = setAverage(movies[i]);
-		sortedRatings.push(movies[i], average);
+		sortedRatings.push([movies[i], average]);
 	}
 	let temp;
+	let k;
 	for (let i = 0; i < sortedRatings.length; i++) {
 		for (let j = 0; j < sortedRatings.length-i-1; j++) {
-			if (sortedRatings[j][1] > sortedRatings[j+1][1]) {
+			k = Number(j) + 1;
+			if (sortedRatings[j][1] < sortedRatings[k][1]) {
 				temp = sortedRatings[j];
-				sortedRatings[j] = sortedRatings[j+1];
-				sortedRatings[j+1] = temp;
+				sortedRatings[j] = sortedRatings[k];
+				sortedRatings[k] = temp;
 			}
 		}
 	}
