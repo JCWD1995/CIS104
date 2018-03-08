@@ -204,7 +204,7 @@ function printReviewsTitle(title) {
 function pickReview(i, test, type) {
 	let choice;
 	while (isNaN(choice) || choice < 1 || choice > i) {
-		choice = PROMPT.question("Which Review ID would you like to view?");
+		choice = Number(PROMPT.question("Which Review ID would you like to view?"));
 		if (isNaN(choice) || choice < 1 || choice > i) {
 			console.log("INVALID INPUT");
 		}
@@ -213,7 +213,7 @@ function pickReview(i, test, type) {
 }
 
 function findReview(choice, test, type) {
-	let j = 0;
+	let j = Number(0);
 	if (type === "title") {
 		for (let i = 0; i < reviews.length; i++) {
 			if (reviews[i][0] === test) {
