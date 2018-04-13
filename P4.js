@@ -21,7 +21,7 @@ const RATING = {
 
 function main() {
 	setMovies();
-	while (0 === 0) {
+	for (;;) {
 		printMenu();
 	}
 }
