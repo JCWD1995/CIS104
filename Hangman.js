@@ -33,10 +33,12 @@ function main() {
 		populateCorrectLetters();
 		populateLetters();
 		resetGuessedLetters();
-		while (solve !== YES && wrongGuess < maxWrongGuess) {
+		while (solve !== YES && wrongGuess !== maxWrongGuess) {
 			setGuess();
 			checkGuess();
 		}
+		printResults();
+		setContinueResponse();
 	}
 }
 
@@ -63,7 +65,7 @@ function clearScreen() {
 }
 
 function readWords() {
-	file = IO.readFileSync("words.txt", "utf8");
+	let file = IO.readFileSync("words.txt", "utf8");
 	defaultWords = file.toString().split(/\r?\n/);
 	defaultWords.pop(); //remove extra value
 }
@@ -73,7 +75,7 @@ function setSolve() {
 }
 
 function setWrongGuess() {
-	guess = Number(0);
+	wrongGuess = Number(0);
 }
 
 function setDifficulty() {
@@ -105,6 +107,7 @@ function setMaxWrongGuess(i) {
 		case 5: maxWrongGuess = 1;
 			break;
 	}
+	maxWrongGuess = Number(maxWrongGuess);
 }
 
 function setWord() {
@@ -112,7 +115,7 @@ function setWord() {
 	while (pick !== YES && pick !== NO) {
 		pick = Number(PROMPT.question("Would you like to pick your own word?\n 1=yes, 0=no\n"));
 		if (pick !== YES && pick !== NO) {
-			console.log(INVALID RESPONSE);
+			console.log("INVALID RESPONSE");
 			PROMPT.question("Press enter to continue.");
 			clearScreen();
 		}
@@ -136,21 +139,22 @@ function setWord() {
 
 function checkWord() {
 	let wordLetters = word.split("");
+	let test = YES;
 	const MIN_WORD_LENGTH = Number(2);
 	const MAX_WORD_LENGTH = Number(20);
 	if (wordLetters.length < MIN_WORD_LENGTH || wordLetters.length > MAX_WORD_LENGTH) {
-		return NO;
+		test = NO;
 	}
 	for (let i = 0; i < wordLetters.length; i++) {
 		if (! /^[a-z]$/.test(wordLetters[i])) {
-			return NO;
+			test = NO;
 		}
 	}
 	return YES;
 }
 
 function pushWord() {
-	while test;
+	let test;
 	for (let i = 0; i < defaultWords; i++) {
 		if (word === defaultWords[i]) {
 			test = NO;
@@ -177,7 +181,7 @@ function populateCorrectLetters() {
 function populateLetters() {
 	letters = [];
 	for (let i = 0; i < correctLetters.length; i++) {
-		letters.push(_);
+		letters.push("_");
 	}
 }
 
@@ -191,8 +195,8 @@ function setGuess() {
 	while (check !== YES) {
 		clearScreen();
 		console.log(`You have made ${wrongGuess} incorrect guesses out of ${maxWrongGuess}`);
+		printLetters();
 		printGuessedLetters();
-		pringLetters();
 		guess = PROMPT.question("Please enter a lowercase letter you would like to use to guess at the word.\n");
 		check = checkGuess();
 		if (check !== YES) {
@@ -204,27 +208,32 @@ function setGuess() {
 }
 
 function printGuessedLetters() {
+	let allLetters = "";
 	for (let i = 0; i < guessedLetters.length; i++) {
-		console.log(`${guessedLetters[i]} `);
+		allLetters = allLetters + guessedLetters[i] + " ";
 	}
+	console.log(allLetters);
 }
 
 function printLetters() {
+	let letterString = "";
 	for (let i = 0; i < letters.length; i++) {
-		console.log(`${letters[i]} `);
+		letterString = letterString + letters[i] + " ";
 	}
+	console.log(letterString);
 }
 
 function checkGuess() {
+	let test = YES;
 	if (! /^[a-z]$/.test(guess)) {
-		return NO;
+		test = NO;
 	}
 	for (let i = 0; i < guessedLetters.length; i++) {
 		if (guessedLetters[i] === guess) {
-			return NO;
+			test = NO;
 		}
 	}
-	return YES;
+	return test;
 }
 
 function pushGuessedLetters() {
@@ -232,7 +241,7 @@ function pushGuessedLetters() {
 }
 
 function checkGuess() {
-	let check = NO;
+	let check;
 	for (let i = 0; i < correctLetters.length; i++) {
 		if (guess === correctLetters[i]) {
 			letters[i] = guess;
@@ -253,14 +262,26 @@ function checkSolve() {
 		if (letters[i] !== correctLetters[i]) {
 			break;
 		}
+		console.log("incrementing check");
 		check++;
 	}
 	if (check === MAX) {
 		solve = YES;
 	}
+	PROMPT.question();
 }
 
 function incrementWrongGuess() {
 	wrongGuess++;
+}
+
+function printResults() {
+	clearScreen();
+	if (solve === YES) {
+		console.log("CONGRADULATIONS! YOU WIN!!!");
+	} else {
+		console.log("Better luck next time!");
+	}
+	PROMPT.question("Press enter to continue.");
 }
 
