@@ -150,7 +150,7 @@ function checkWord() {
 			test = NO;
 		}
 	}
-	return YES;
+	return test;
 }
 
 function pushWord() {
