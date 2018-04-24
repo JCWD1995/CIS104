@@ -198,7 +198,7 @@ function setGuess() {
 		printLetters();
 		printGuessedLetters();
 		guess = PROMPT.question("Please enter a lowercase letter you would like to use to guess at the word.\n");
-		check = checkGuess();
+		check = testGuess();
 		if (check !== YES) {
 			console.log("INVALID INPUT");
 			PROMPT.question("Press enter to continue.");
@@ -223,7 +223,7 @@ function printLetters() {
 	console.log(letterString);
 }
 
-function checkGuess() {
+function testGuess() {
 	let test = YES;
 	if (! /^[a-z]$/.test(guess)) {
 		test = NO;
@@ -262,13 +262,11 @@ function checkSolve() {
 		if (letters[i] !== correctLetters[i]) {
 			break;
 		}
-		console.log("incrementing check");
 		check++;
 	}
 	if (check === MAX) {
 		solve = YES;
 	}
-	PROMPT.question();
 }
 
 function incrementWrongGuess() {
