@@ -22,9 +22,7 @@ function main() {
 	}
 	populateNoJobs();
 	populateEmployeePay();
-	console.log(employeePay);
-	console.log(noJobs);
-//	menu();
+	menu();
 }
 
 main();
@@ -91,24 +89,19 @@ function populateEmployeePay() {
 }
 
 function menu() {
-	let choice = pickMenu();
-	directMenu(choice);
-}
-
-function pickMenu() {
 	let choice;
 	const MIN_MENU = 1;
 	const MAX_MENU = 4;
 	while (isNaN(choice) || choice < MIN_MENU || choice > MAX_MENU || choice %1 !== 0) {
 		printMenu();
-		choice = PROMPT.question("Which menu option would you like?");
+		choice = Number(PROMPT.question("Which menu option would you like?\n"));
 		if (isNaN(choice) || choice < MIN_MENU || choice > MAX_MENU || choice %1 !== 0) {
 			console.log("INVALID INPUT");
 			PROMPT.question("Press enter to continue.");
 			clearScreen();
 		}
 	}
-	return choice;
+	directMenu(choice);
 }
 
 function printMenu() {
