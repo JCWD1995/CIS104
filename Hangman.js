@@ -195,8 +195,8 @@ function setGuess() {
 	while (check !== YES) {
 		clearScreen();
 		console.log(`You have made ${wrongGuess} incorrect guesses out of ${maxWrongGuess}`);
-		printLetters();
 		printGuessedLetters();
+		printLetters();
 		guess = PROMPT.question("Please enter a lowercase letter you would like to use to guess at the word.\n");
 		check = testGuess();
 		if (check !== YES) {
@@ -208,11 +208,11 @@ function setGuess() {
 }
 
 function printGuessedLetters() {
-	let allLetters = "";
+	let letterString = "";
 	for (let i = 0; i < guessedLetters.length; i++) {
-		allLetters = allLetters + guessedLetters[i] + " ";
+		letterString = letterString + guessedLetters[i] + " ";
 	}
-	console.log(allLetters);
+	console.log(letterString);
 }
 
 function printLetters() {
