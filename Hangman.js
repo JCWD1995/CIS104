@@ -276,7 +276,7 @@ function incrementWrongGuess() {
 function printResults() {
 	clearScreen();
 	if (solve === YES) {
-		console.log("CONGRADULATIONS! YOU WIN!!!");
+		console.log("CONGRATULATIONS! YOU WIN!!!");
 	} else {
 		console.log("Better luck next time!");
 	}
